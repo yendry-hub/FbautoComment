@@ -1,0 +1,122 @@
+body {
+    font-family: sans-serif;
+  }
+  
+  .container {
+    display: flex;
+    height: 100vh;
+    border: 3px solid rgb(162, 168, 162);
+  }
+  
+  .sidebar {
+    width: 200px;
+    background-color: #f1f1f1;
+    padding: 20px;
+    transition: all 0.3s ease-in-out;
+  }
+  
+  .sidebar.hidden {
+    width: 0px;
+  }
+  
+  .content {
+    flex: 1;
+    padding: 20px;
+    background-color: #f5f5f5;
+  }
+  
+  .sidebar a {
+    display: block;
+    padding: 10px;
+    text-decoration: none;
+    color: black;
+  }
+  
+  .sidebar a.active {
+    background-color: #ddd;
+  }
+  
+  .content-section {
+    display: none;
+    margin-bottom: 20px;
+    /* Spacing between content sections */
+    border-radius: 5px;
+    /* Rounded corners for content sections (optional) */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    /* Subtle shadow for content sections (optional) */
+  }
+  
+  .content-section.active {
+    display: block;
+    margin-bottom: 20px;
+    /* Spacing between content sections */
+    border-radius: 5px;
+    /* Rounded corners for content sections (optional) */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    /* Subtle shadow for content sections (optional) */
+  }
+  
+  .sidebar.hidden {
+    width: 0px;
+    /* Additional styles for hidden state (optional) */
+    /* For example: */
+    /* opacity: 0; */
+    /* transition: opacity 0.3s ease-in-out; */
+  }
+  
+  input[type=text], select {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+  
+  input[type=submit] {
+    width: 100%;
+    background-color: #4CAF50;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  input[type="password"] {
+    width: calc(100% - 22px);
+    padding: 10px;
+    margin: 5px 0;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  textarea[name="comment"] {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+  button[type="submit"] {
+    background-color: #4CAF50;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    width: calc(100% - 22px);
+  }
+  button[type="submit"]:hover {
+    background-color: #45a049;
+  div {
+    border-radius: 5px;
+    background-color: #f2f2f2;
+    padding: 20px;
+  }}

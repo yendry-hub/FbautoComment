@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            font-family: sans-serif;
+        }
+
+        .container {
+            display: flex;
+            height: 100vh;
+            border: 3px solid rgb(162, 168, 162);
+        }
+
+        .sidebar {
+            width: 200px;
+            background-color: #f1f1f1;
+            padding: 20px;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .sidebar.hidden {
+            width: 0px;
+        }
+
+        .content {
+            flex: 1;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        .sidebar a {
+            display: block;
+            padding: 10px;
+            text-decoration: none;
+            color: black;
+        }
+
+        .sidebar a.active {
+            background-color: #ddd;
+        }
+
+        .content-section {
+            display: none;
+            margin-bottom: 20px;
+            /* Spacing between content sections */
+            border-radius: 5px;
+            /* Rounded corners for content sections (optional) */
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            /* Subtle shadow for content sections (optional) */
+        }
+
+        .content-section.active {
+            display: block;
+            margin-bottom: 20px;
+            /* Spacing between content sections */
+            border-radius: 5px;
+            /* Rounded corners for content sections (optional) */
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            /* Subtle shadow for content sections (optional) */
+        }
+
+        .sidebar.hidden {
+            width: 0px;
+            /* Additional styles for hidden state (optional) */
+            /* For example: */
+            /* opacity: 0; */
+            /* transition: opacity 0.3s ease-in-out; */
+        }
+
+        input[type=text],
+        select {
+            width: 100%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        input[type=submit] {
+            width: 100%;
+            background-color: #4CAF50;
+            color: white;
+            padding: 14px 20px;
+            margin: 8px 0;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        input[type="password"] {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin: 5px 0;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        textarea[name="comment"] {
+            width: 100%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        button[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            padding: 14px 20px;
+            margin: 8px 0;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: calc(100% - 22px);
+        }
+
+        button[type="submit"]:hover {
+            background-color: #45a049;
+
+            div {
+                border-radius: 5px;
+                background-color: #f2f2f2;
+                padding: 20px;
+            }
+        }
+
+        table, th, td { 
+		border:1px solid rgb(48, 46, 46); 
+		}
+    </style>
+</head>
+
+<body>
+    <h1>Auto Comment for Facebook Post</h1>
+    
+    <div class="container">
+        <div class="sidebar">
+
+            <a href="#" class="active" onclick="showSection('link')">Enter URL</a>
+            <a href="#" onclick="showSection('add-data')">Add Data</a>
+            <a href="#" onclick="showSection('data-table')">Data Table</a>
+            
+        </div>
+        <span class="sidebar-toggle">&#9776;</span>
+        <div class="content">
+            <form onsubmit="openInIncognitoTab(); return false;">
+                <div class="content-section" id="link">
+                    <input type="text" id="urlInput" placeholder="Enter your link">
+                    <button type="submit" onclick="submitLink()">Open Link</button>
+                </div>
+            </form>
+            <div class="content-section" id="add-data">
+                <form method="POST"> 
+                    <label>Enter username:</label> 
+                    <input type="text" name="username" placeholder="Enter username" required><br/> 
+                    <label>Enter password:</label> 
+                    <input type="text" name="password" placeholder="Enter password" required><br/> 
+                    <label>Enter comment:</label> 
+                    <input type="text" name="comment" placeholder="Enter comment" required><br/> 
+                     
+                    <input type = "submit" value = "Save Data"/><br/> 
+                </form> 
+            </div>
+            <div class="content-section" id="data-table">
+                <h1 onclick="window.location.href='{{ url_for('data_table') }}';">Data Table</h1>
+                <table style="width:100%">
+                    
+                        <tr>
+                            <th>Username</th>
+                            <th>Password</th>
+                            <th>Comment</th>
+                        </tr>
+                    
+                        {%for user_data in data%} 
+                        <tr> 
+                            <td>{{user_data[0]}}</td> 
+                            <td>{{user_data[1]}}</td> 
+                            <td>{{user_data[2]}}</td> 
+                            </tr> 
+                        {%endfor%} 
+                    
+                </table>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+    <script>
+        const sidebar = document.querySelector('.sidebar');
+        const content = document.querySelector('.content');
+        const sidebarToggleButton = document.querySelector('.sidebar-toggle'); // Add a toggle element
+
+        let isSidebarHidden = false; // Track sidebar state
+        let clickTimeout; // Timeout to handle rapid clicks
+
+        function showSection(sectionId) {
+            const sections = document.querySelectorAll('.content-section');
+            const links = document.querySelectorAll('.sidebar a');
+            sections.forEach(section => section.classList.remove('active'));
+            links.forEach(link => link.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
+            document.querySelector(`.sidebar a[href="#${sectionId}"]`).classList.add('active');
+        }
+
+        function toggleSidebarHide() {
+            if (!isSidebarHidden) {
+                isSidebarHidden = true;
+                sidebar.classList.add('hidden');
+                sidebar.style.opacity = 0;
+            }
+        }
+
+        function toggleSidebarShow() {
+            if (isSidebarHidden) {
+                isSidebarHidden = false;
+                sidebar.classList.remove('hidden');
+                sidebar.style.opacity = 1;
+            }
+        }
+
+        // Inside toggleSidebarHide and toggleSidebarShow functions (optional)
+        if (isSidebarHidden) {
+            sidebar.style.opacity = 0; // Optional: Set opacity to 0 for a fade-out effect
+        } else {
+            sidebar.style.opacity = 1; // Optional: Restore opacity to 1
+        }
+
+        // Event Listeners
+        content.addEventListener('click', toggleSidebarHide); // Click anywhere in content hides sidebar
+
+        if (sidebarToggleButton) { // If toggle element exists
+            sidebarToggleButton.addEventListener('click', function (event) {
+                event.preventDefault(); // Prevent default behavior for toggle button clicks
+                if (isSidebarHidden) {
+                    toggleSidebarShow();
+                } else {
+                    toggleSidebarHide();
+                }
+            });
+        }
+
+        function submitLink() {
+            // Implement your link submission logic here
+            const linkText = document.getElementById('link-text').value;
+            console.log("Submitted Link:", linkText);
+            // Clear the textbox after submission
+            document.getElementById('link-text').value = '';
+        }
+
+        // Add event listener for form submission (placeholder)
+        const dataForm = document.getElementById('data-form');
+        if (dataForm) {
+            dataForm.addEventListener('submit', function (event) {
+                event.preventDefault();
+                // Implement your form submission logic here
+                const username = document.getElementById('username').value;
+                const password = document.getElementById('password').value;
+                const comment = document.getElementById('comment').value;
+                console.log("Submitted Data:", { username, password, comment });
+                // You can add logic to process the form data (e.g., send to server)
+            });
+        }
+
+    </script>
+</body>
+
+</html>

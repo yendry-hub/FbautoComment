@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Facebook Account Data</title>
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='modal.css') }}">
+</head>
+
+<body>
+  <div class="sidebar" id="sidebar">
+    <h2></h2><br>
+    <h2 onclick="showAddForm()">Add New</h2>
+    <h2 onclick="showTable()">Table</h2>
+    <h2 id="myBtn">Link To Watch</h2>
+  </div>
+  <span class="sidebar-toggle" onclick="toggleSidebar()">☰</span>
+  <div class="content" id="content">
+    <h1>Facebook Account Data</h1>
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <ul>
+      {% for message in messages %}
+      <li class="flash">{{ message }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+    {% endwith %}
+
+    <!-- Add New form -->
+    <div class="form-box" id="addForm">
+      <form method="POST" action="/add">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required><br>
+        <label for="phone">Phone Number:</label>
+        <input type="text" id="phone" name="phone" required><br>
+        <label for="password">Password:</label>
+        <input type="text" id="password" name="password" required><br>
+        <label for="comment">Comment:</label>
+        <textarea id="comment" name="comment" rows="4" cols="38"></textarea><br>
+        <input type="submit" value="Submit">
+      </form>
+    </div>
+    <!-- Table -->
+    <table id="tableContent">
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Phone Number</th>
+        <th>Password</th>
+        <th>Comment</th>
+        <th>Action</th>
+      </tr>
+      {% for entry in entries %}
+      <tr>
+        <td>{{ entry[0] }}</td>
+        <td>{{ entry[1] }}</td>
+        <td>{{ entry[2] }}</td>
+        <td>{{ entry[3] }}</td>
+        <td>{{ entry[4] }}</td>
+        <td>
+          <button class="edit-button" onclick="editEntry({{ entry[0] }})">Edit</button>
+          <button class="delete-button" onclick="deleteEntry({{ entry[0] }})">Delete</button>
+        </td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+
+  <!-- The Modal -->
+  <div id="myModal" class="modal">
+
+    <!-- Modal content -->
+    <div class="modal-content">
+      <div class="modal-header">
+        <span class="close">&times;</span>
+        <h2>Enter the link to Watch:</h2>
+      </div>
+      <div class="modal-body">
+        <form id="modalForm" action="/open_website" method="POST" style="width: 90%;">
+          <label for="url">Enter URL:</label>
+          <input type="text" id="url" name="url" required><br>
+          <input type="text" id="modalId" name="id" visibility: hidden>
+          <input type="text" id="modalName" name="name" visibility: hidden>
+          <input type="text" id="modalPhone" name="phone" visibility: hidden>
+          <input type="text" id="modalPassword" name="password" visibility: hidden>
+          <textarea id="modalComment" name="comment" rows="4" cols="38" visibility: hidden></textarea>
+          <input type="submit" value="Submit" onclick="disableButton()">
+        </form>
+        <form id="modalForm1" action="/open_website1" method="POST" style="width: 90%;" visibility: hidden>
+          <input type="text" id="modalUrl1" name="url1" visibility: hidden>
+          <input type="text" id="modalId1" name="id1" visibility: hidden>
+          <input type="text" id="modalName1" name="name1" visibility: hidden>
+          <input type="text" id="modalPhone1" name="phone1" visibility: hidden>
+          <input type="text" id="modalPassword1" name="password1" visibility: hidden>
+          <textarea id="modalComment1" name="comment1" rows="4" cols="38" visibility: hidden></textarea>
+        </form>
+      </div>
+      <div class="modal-footer">
+      </div>
+    </div>
+  </div>
+
+  <script src="{{ url_for('static', filename='scripts.js') }}"></script>
+  <script src="{{ url_for('static', filename='modal.js') }}"></script>
+</body>
+
+</html>
